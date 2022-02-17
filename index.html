@@ -9,15 +9,16 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <p>Online text encryptro and decryptor. The site doesn't store your passwords or texts.
+          <p>Online text encryptor and decryptor. The site doesn't store your passwords or texts.
           There's no backend here&nbsp;&mdash; just frontend that doesn't remember anything. Be
           careful: we really don't know your password and can't repair it.</p>
           <p>How to use:</p>
           <ol>
-            <li>Type your secret text in <em>Decrypted</em> area.</li>
+            <li>Type your text</li>
             <li>Enter your <em>password</em>.</li>
             <li>Press the <em>Encrypt</em> button.</li>
-            <li>Copy-past <em>Encrypted</em> text to your cloud storage like Google Drive Doc.</li>
+            <li>Copy-past result text to a cloud storage like Google Drive Doc or Google Keep.</li>
+            <li>To restore source text just copy-past encrypted text back and press <em>Decrypt</em> button.</li>
           </ol>
         </div>
       </div>
@@ -28,24 +29,13 @@
         </div>
       </div>
       <div class="row">
-        <label for="decrypted" class="col-6 text-center control-label display-6">Decrypted</label>
-        <label for="encrypted" class="col-6 text-center control-label display-6">Encrypted</label>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <textarea class="form-control" id="decrypted" rows="10"></textarea>
-        </div>
-        <div class="col-6">
-          <textarea class="form-control" id="encrypted" rows="10"></textarea>
+        <div class="col-12">
+          <textarea class="form-control" id="text" rows="10"></textarea>
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
-          <button type="button" class="btn btn-primary" id="encrypt">Encrypt</button>
-        </div>
-        <div class="col-6">
-          <button type="button" class="btn btn-primary" id="decrypt">Decrypt</button>
-        </div>
+        <button type="button" class="btn btn-primary col-2 offset-2" id="encrypt">Encrypt</button>
+        <button type="button" class="btn btn-primary col-2 offset-4" id="decrypt">Decrypt</button>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -54,21 +44,25 @@
     window.addEventListener("load", function () {
       document.getElementById("encrypt").addEventListener("click", function() {
         let password = document.getElementById("password").value;
-        let decrypted = document.getElementById("decrypted").value;
+        let decrypted = document.getElementById("text").value;
 
         let encrypted = CryptoJS.AES.encrypt(decrypted, password).toString();
         let based = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
 
-        document.getElementById("encrypted").value = based;
+        document.getElementById("text").value = based;
       });
       document.getElementById("decrypt").addEventListener("click", function() {
         let password = document.getElementById("password").value;
-        let based = document.getElementById("encrypted").value;
+        let based = document.getElementById("text").value;
 
-        let encrypted = CryptoJS.enc.Base64.parse(based).toString(CryptoJS.enc.Utf8);
-        let decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
+        try {
+          let encrypted = CryptoJS.enc.Base64.parse(based).toString(CryptoJS.enc.Utf8);
+          let decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
 
-        document.getElementById("decrypted").value = decrypted;
+          document.getElementById("text").value = decrypted;
+        } catch {
+          alert("It seems you're trying to decrypt something that wasn't encrypted.");
+        }
       });
     });
     </script>
