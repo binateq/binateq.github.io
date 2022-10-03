@@ -63,8 +63,9 @@
           const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
 
           document.getElementById("text").value = decrypted;
-        } catch {
-          alert("It seems you're trying to decrypt something that havn't been encrypted.");
+        } catch (exception) {
+          console.log(exception);
+          alert("It seems you've entered wrong password, or you're trying to decrypt something that havn't been encrypted.");
         }
       });
     });
