@@ -10,15 +10,14 @@
       <div class="row">
         <div class="col">
           <p>Online text encryptor and decryptor. The site doesn't store your passwords or texts.
-          There's no backend here&nbsp;&mdash; just frontend that doesn't remember anything. Be
-          careful: we really don't know your password and can't repair it.</p>
+          Be careful: we really don't know your passwords and can't restore them.</p>
           <p>How to use:</p>
           <ol>
             <li>Type your text</li>
             <li>Enter your <em>password</em>.</li>
             <li>Press the <em>Encrypt</em> button.</li>
-            <li>Copy-past result text to a cloud storage like Google Drive Doc or Google Keep.</li>
-            <li>To restore source text just copy-past encrypted text back and press <em>Decrypt</em> button.</li>
+            <li>Copy-paste result text to a cloud storage like Google Drive or Google Keep.</li>
+            <li>To restore source text copy-paste encrypted text back and press <em>Decrypt</em>.</li>
           </ol>
         </div>
       </div>
@@ -43,25 +42,30 @@
     <script>
     window.addEventListener("load", function () {
       document.getElementById("encrypt").addEventListener("click", function() {
-        let password = document.getElementById("password").value;
-        let decrypted = document.getElementById("text").value;
+        const password = document.getElementById("password").value;
+        const decrypted = document.getElementById("text").value;
 
-        let encrypted = CryptoJS.AES.encrypt(decrypted, password).toString();
-        let based = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
+        const encrypted = CryptoJS.AES.encrypt(decrypted, password).toString();
+        const based = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
 
-        document.getElementById("text").value = based;
+        document.getElementById("text").value = "httsp://crypnote.binateq.com\n\n"
+                                              + based;
       });
       document.getElementById("decrypt").addEventListener("click", function() {
-        let password = document.getElementById("password").value;
+        const password = document.getElementById("password").value;
         let based = document.getElementById("text").value;
+        const indexOfDoubleNewline = based.indexOf("\n\n");
+        if (indexOfDoubleNewline != -1)
+          based = based.substring(indexOfDoubleNewline + 2);
 
         try {
-          let encrypted = CryptoJS.enc.Base64.parse(based).toString(CryptoJS.enc.Utf8);
-          let decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
+          const encrypted = CryptoJS.enc.Base64.parse(based).toString(CryptoJS.enc.Utf8);
+          const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
 
           document.getElementById("text").value = decrypted;
-        } catch {
-          alert("It seems you're trying to decrypt something that wasn't encrypted.");
+        } catch (exception) {
+          console.log(exception);
+          alert("It seems you've entered wrong password, or you're trying to decrypt something that havn't been encrypted.");
         }
       });
     });
