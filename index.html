@@ -48,7 +48,7 @@
         const encrypted = CryptoJS.AES.encrypt(decrypted, password).toString();
         const based = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
 
-        document.getElementById("text").value = "httsp://crypnote.binateq.com\n\n"
+        document.getElementById("text").value = "https://crypnote.binateq.com\n\n"
                                               + based;
       });
       document.getElementById("decrypt").addEventListener("click", function() {
